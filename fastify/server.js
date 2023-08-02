@@ -7,6 +7,15 @@ fastify.register(require('@fastify/mysql'), {
   connectionString: 'mysql://root@localhost/ns_trial'
 })
 
+fastify.register(async function (fastify) {
+  fastify.get('/', { websocket: true }, (connection /* SocketStream */, req /* FastifyRequest */) => {
+    connection.socket.on('message', message => {
+      // message.toString() === 'hi from client'
+      connection.socket.send('hi from server')
+    })
+  })
+})
+
 // Declare a route
 fastify.get('/routes', function handler (request, reply) {
     // reply.redirect("https://fastify.dev/")
