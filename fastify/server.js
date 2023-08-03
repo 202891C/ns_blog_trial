@@ -1,23 +1,48 @@
 // Require the framework and instantiate it
-const fastify = require('fastify')({ logger: true })
+const Fastify = require('fastify')// ({ logger: true })
+const cors = require('@fastify/cors')
 
-{/* <script>const cors = require("cors");</script> */}
+const fastify = Fastify()
+//fastify.use(cors());
 
+
+// const register = async () => {
+//   try{
+//     fastify.register(cors, { 
+//   origin: "http://127.0.0.1:5173",
+//   methods: ['GET', 'POST', 'PUT']
+// })
+//   } catch (err) {
+//     fastify.log.error(err)
+//     process.exit(1)
+//   }
+// }
+// register()
+
+fastify.register(cors, {
+  origin: "http://localhost:5173", 
+  methods: ['GET', 'POST', 'PUT'],
+  credentials: true
+})
+
+// fastify.register(cors, {
+//   origin: "http://localhost:3000", 
+//   methods: ['GET', 'POST', 'PUT'],
+//   credentials: true
+// })
+
+// Connect to database
 fastify.register(require('@fastify/mysql'), {
   connectionString: 'mysql://root@localhost/ns_trial'
 })
 
-fastify.register(async function (fastify) {
-  fastify.get('/', { websocket: true }, (connection /* SocketStream */, req /* FastifyRequest */) => {
-    connection.socket.on('message', message => {
-      // message.toString() === 'hi from client'
-      connection.socket.send('hi from server')
-    })
-  })
-})
+// Create
+// Read
+// Update
+// Delete
 
-// Declare a route
-fastify.get('/routes', function handler (request, reply) {
+// Declare read routes
+fastify.get('/', function handler (request, reply) {
     // reply.redirect("https://fastify.dev/")
     reply.send({ hello: 'world' })
 })
@@ -39,6 +64,19 @@ fastify.get('/blog', function(req, reply) {
     }
   )
 })
+
+// Declare create routes
+fastify.post('/createBlog', function(req, reply) {
+  var data = JSON.parse(req.body);
+  console.log(data + '// DR')
+    fastify.mysql.query(
+      'INSERT INTO `blogs` (`Title`, `User`, `User_Id`, `Description`) VALUES (?,?,?,?)', [data.Title, data.User, data.Userid, data.Description], 
+      function onResult (err, result) {
+        reply.send(err || result)
+      }
+    )
+})
+
 
 // Run the server!
 fastify.listen({ port: 3000 }, (err) => {

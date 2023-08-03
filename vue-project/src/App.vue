@@ -1,11 +1,120 @@
 <script setup>
+import { ref, onMounted, onBeforeMount} from 'vue'
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
+import $ from "jquery";
+
+defineProps({
+  title: "",
+  description: "",
+  user: "",
+  userid: "",
+  formSubmitted: false
+})
+
+function submitForm(submitEvent) {
+      var blog = {
+        title: submitEvent.target.elements.title.value,
+        description: submitEvent.target.elements.description.value,
+        user: submitEvent.target.elements.user.value,
+        userid: submitEvent.target.elements.userid.value,
+      }
+  fetch("http://localhost:3000/createBlog", {
+        method: 'POST',
+        body: JSON.stringify({
+          Title: blog.title,
+          Description: blog.description,
+          User: blog.user,
+          Userid: blog.userid
+        })
+      })
+      .then(res => {
+        if (res.status != 200){
+          console.log('Error creating blog');
+        //   console.log(JSON.stringify({
+        //   Title: blog.title,
+        //   Description: blog.description,
+        //   User: blog.user,
+        //   Userid: blog.userid
+        // }))
+          console.log(blog.title + ' ' + blog.description + ' ' + blog.user + ' ' + blog.userid)
+        }
+        else{
+          console.log('Blog created!')
+        }
+      })
+}
+
+
+</script>
+
+<script>
+// setup
+// export default {
+  // props: ['title','description',
+  //         'user', 'userid'],
+  // data() {
+  //   return {
+  //     title: "",
+  //     description: "",
+  //     user: "",
+  //     userid: "",
+  //     formSubmitted: false
+  //   };
+  // },
+  // mounted:(() =>{
+  //     fetch("http://127.0.0.1:3000/createBlog", {
+  //       method: 'PUT',
+  //       body: {
+  //         title: this.title,
+  //         description: this.description,
+  //         user: this.user,
+  //         userid: this.userid
+  //       }
+  //     })
+  //     .then(res => {
+  //       console.log('Data updated')
+  //     })
+  //     // .then
+  //     // .catch
+  // }) 
+  // methods: {
+  //   submitForm(submitEvent) {
+  //     var blog = {
+  //       title: submitEvent.target.elements.title.value,
+  //       description: submitEvent.target.elements.description.value,
+  //       user: submitEvent.target.elements.user.value,
+  //       userid: submitEvent.target.elements.userid.value,
+  //     };
+
+      // $.ajax({
+      //   url: "http://127.0.0.1:3000/createBlog",
+      //   method: "put",
+      //   data: blog
+      // }).done(
+      //   function (data) {
+      //     alert("Event updated!");
+      //     this.formSubmitted = true
+      //   }
+      // ).fail(
+      //   function (err) {
+      //     console.log(err.responseText);
+      //   }
+      // );
+
+
+  //     // console.log(submitEvent.target.elements.title.value);
+  //     // this.title = submitEvent.target.elements.title.value
+
+//     }
+//   },
+
+// };
 </script>
 
 <template>
   <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
+    <!-- <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
 
     <div class="wrapper">
       <HelloWorld msg="You did it!" />
@@ -14,12 +123,37 @@ import HelloWorld from './components/HelloWorld.vue'
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/about">About</RouterLink>
       </nav>
+    </div> -->
+    <form @submit.prevent="submitForm">
+      <!-- v-if="!formSubmitted"  (to hide form when form has been submitted) -->
+      <label for="name">Blog Title: </label>
+      <input type="text" id="title" name="title" >
+      <!-- v-model="title" -->
+      <br>
+      <label for="description">Blog Description: </label>
+      <input type="text" id="description" name="description">
+      <br>
+      <label for="user">User: </label>
+      <input type="text" id="user" name="user" >
+      <label for="userid">User Id: </label>
+      <input type="text" id="userid" name="userid" >
+      <br>
+      <button class="submit" type="submit">Save blog</button>
+    </form>
+    <div v-if="formSubmitted">
+      <h3>Blog Submitted</h3>
+      <p>title: {{ title }}</p>
+      <p>description: {{ description }}</p>
+      <p>User: {{ user }}</p>
+      <small>Click on run to launch the app again.</small>
     </div>
   </header>
 
-  <RouterView />
+
+  <!-- <RouterView /> -->
 </template>
 
+<!-- 
 <style scoped>
 header {
   line-height: 1.5;
@@ -82,4 +216,4 @@ nav a:first-of-type {
     margin-top: 1rem;
   }
 }
-</style>
+</style> -->
