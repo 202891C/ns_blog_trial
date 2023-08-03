@@ -3,33 +3,13 @@ const Fastify = require('fastify')// ({ logger: true })
 const cors = require('@fastify/cors')
 
 const fastify = Fastify()
-//fastify.use(cors());
 
-
-// const register = async () => {
-//   try{
-//     fastify.register(cors, { 
-//   origin: "http://127.0.0.1:5173",
-//   methods: ['GET', 'POST', 'PUT']
-// })
-//   } catch (err) {
-//     fastify.log.error(err)
-//     process.exit(1)
-//   }
-// }
-// register()
-
+// Bypass Access-Control-Allow-Origin using Cors on backend
 fastify.register(cors, {
   origin: "http://localhost:5173", 
   methods: ['GET', 'POST', 'PUT'],
   credentials: true
 })
-
-// fastify.register(cors, {
-//   origin: "http://localhost:3000", 
-//   methods: ['GET', 'POST', 'PUT'],
-//   credentials: true
-// })
 
 // Connect to database
 fastify.register(require('@fastify/mysql'), {
@@ -43,7 +23,7 @@ fastify.register(require('@fastify/mysql'), {
 
 // Declare read routes
 fastify.get('/', function handler (request, reply) {
-    // reply.redirect("https://fastify.dev/")
+    // reply.redirect("https://fastify.dev/") // note to redirect pages
     reply.send({ hello: 'world' })
 })
 
@@ -65,10 +45,10 @@ fastify.get('/blog', function(req, reply) {
   )
 })
 
+
 // Declare create routes
 fastify.post('/createBlog', function(req, reply) {
-  var data = JSON.parse(req.body);
-  console.log(data + '// DR')
+  var data = JSON.parse(req.body); // convert string to JSON object
     fastify.mysql.query(
       'INSERT INTO `blogs` (`Title`, `User`, `User_Id`, `Description`) VALUES (?,?,?,?)', [data.Title, data.User, data.Userid, data.Description], 
       function onResult (err, result) {
@@ -76,6 +56,7 @@ fastify.post('/createBlog', function(req, reply) {
       }
     )
 })
+
 
 
 // Run the server!

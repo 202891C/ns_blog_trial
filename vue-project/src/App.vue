@@ -26,18 +26,12 @@ function submitForm(submitEvent) {
           Description: blog.description,
           User: blog.user,
           Userid: blog.userid
-        })
+        }) // convert JSON object to string
       })
       .then(res => {
         if (res.status != 200){
           console.log('Error creating blog');
-        //   console.log(JSON.stringify({
-        //   Title: blog.title,
-        //   Description: blog.description,
-        //   User: blog.user,
-        //   Userid: blog.userid
-        // }))
-          console.log(blog.title + ' ' + blog.description + ' ' + blog.user + ' ' + blog.userid)
+          // console.log(blog.title + ' ' + blog.description + ' ' + blog.user + ' ' + blog.userid)
         }
         else{
           console.log('Blog created!')
@@ -45,71 +39,6 @@ function submitForm(submitEvent) {
       })
 }
 
-
-</script>
-
-<script>
-// setup
-// export default {
-  // props: ['title','description',
-  //         'user', 'userid'],
-  // data() {
-  //   return {
-  //     title: "",
-  //     description: "",
-  //     user: "",
-  //     userid: "",
-  //     formSubmitted: false
-  //   };
-  // },
-  // mounted:(() =>{
-  //     fetch("http://127.0.0.1:3000/createBlog", {
-  //       method: 'PUT',
-  //       body: {
-  //         title: this.title,
-  //         description: this.description,
-  //         user: this.user,
-  //         userid: this.userid
-  //       }
-  //     })
-  //     .then(res => {
-  //       console.log('Data updated')
-  //     })
-  //     // .then
-  //     // .catch
-  // }) 
-  // methods: {
-  //   submitForm(submitEvent) {
-  //     var blog = {
-  //       title: submitEvent.target.elements.title.value,
-  //       description: submitEvent.target.elements.description.value,
-  //       user: submitEvent.target.elements.user.value,
-  //       userid: submitEvent.target.elements.userid.value,
-  //     };
-
-      // $.ajax({
-      //   url: "http://127.0.0.1:3000/createBlog",
-      //   method: "put",
-      //   data: blog
-      // }).done(
-      //   function (data) {
-      //     alert("Event updated!");
-      //     this.formSubmitted = true
-      //   }
-      // ).fail(
-      //   function (err) {
-      //     console.log(err.responseText);
-      //   }
-      // );
-
-
-  //     // console.log(submitEvent.target.elements.title.value);
-  //     // this.title = submitEvent.target.elements.title.value
-
-//     }
-//   },
-
-// };
 </script>
 
 <template>
