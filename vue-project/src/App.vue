@@ -1,89 +1,127 @@
 <script setup>
 import { ref, onMounted, onBeforeMount} from 'vue'
 import { RouterLink, RouterView } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router';
 import HelloWorld from './components/HelloWorld.vue'
-import $ from "jquery";
+// import $ from "jquery";
 
-defineProps({
-  title: "",
-  description: "",
-  user: "",
-  userid: "",
-  formSubmitted: false
-})
+// const url = window.location.href;
+// const lastParam = url.split("/").slice(-2)[0];
 
-function submitForm(submitEvent) {
-      var blog = {
-        title: submitEvent.target.elements.title.value,
-        description: submitEvent.target.elements.description.value,
-        user: submitEvent.target.elements.user.value,
-        userid: submitEvent.target.elements.userid.value,
+
+const componentKey = ref(0);
+
+const forceRerender = () => {
+  componentKey.value += 1;
+  console.log(componentKey.value)
+};
+
+// var data = [];
+const blogData = ref(null)
+
+onMounted(() => {
+  fetch("http://localhost:3000/blog", {
+    method: 'GET',
+    // headers: {
+    // }
+  })
+    .then(async res => {
+      if (res.status != 200) {
+        console.log('Error loading blogs');
+        // console.log(blog.title + ' ' + blog.description + ' ' + blog.user + ' ' + blog.userid)
       }
-  fetch("http://localhost:3000/createBlog", {
-        method: 'POST',
-        body: JSON.stringify({
-          Title: blog.title,
-          Description: blog.description,
-          User: blog.user,
-          Userid: blog.userid
-        }) // convert JSON object to string
-      })
-      .then(res => {
-        if (res.status != 200){
-          console.log('Error creating blog');
-          // console.log(blog.title + ' ' + blog.description + ' ' + blog.user + ' ' + blog.userid)
-        }
-        else{
-          console.log('Blog created!')
-        }
-      })
+      // else if (lastParam == "edit"){
+
+      // }
+      else {
+        console.log('Blogs found!')
+        // console.log(res.json())
+        // CANNOT USE res.json() more than once per section
+        const data = await res.json()
+        blogData.value = data;
+        // console.log(data)
+        // forceRerender()
+        // window.location.reload();
+      }
+    })
+})
+// onUpdated(() => {
+// })
+
+function deleteBlog(id){
+  fetch("http://localhost:3000/deleteBlog/" + id, {
+    method: 'DELETE'
+  })
+  .then(res => {
+    if (res.status != 200) {
+        alert('Error deleting blogs');
+      }
+      else{
+        // forceRerender()
+        alert('Deleted Blog');
+        window.location.reload();
+      }
+  })
 }
+
+// function loginForm(loginEvent) {
+//       var credentials = {
+//         user: loginEvent.target.elements.user.value,
+//         present: loginEvent.target.elements.present.value,
+//       }
+//   fetch("http://localhost:3000/users/present", {
+//         method: 'POST',
+//         body: JSON.stringify({
+//           User: credentials.user,
+//           Present: credentials.present
+//         }) // convert JSON object to string
+//       })
+//       .then(res => {
+//         if (res.status != 200 && res != null){
+//           console.log('Incorrect password');
+//           // console.log(blog.title + ' ' + blog.description + ' ' + blog.user + ' ' + blog.userid)
+//         }
+//         else{
+//           console.log('Logged in!')
+
+//           router.push(
+
+//           )
+//         }
+//       })
+// }
 
 </script>
 
 <template>
-  <header>
-    <!-- <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div> -->
-    <form @submit.prevent="submitForm">
-      <!-- v-if="!formSubmitted"  (to hide form when form has been submitted) -->
-      <label for="name">Blog Title: </label>
-      <input type="text" id="title" name="title" >
-      <!-- v-model="title" -->
-      <br>
-      <label for="description">Blog Description: </label>
-      <input type="text" id="description" name="description">
-      <br>
-      <label for="user">User: </label>
-      <input type="text" id="user" name="user" >
-      <label for="userid">User Id: </label>
-      <input type="text" id="userid" name="userid" >
-      <br>
-      <button class="submit" type="submit">Save blog</button>
-    </form>
-    <div v-if="formSubmitted">
-      <h3>Blog Submitted</h3>
-      <p>title: {{ title }}</p>
-      <p>description: {{ description }}</p>
-      <p>User: {{ user }}</p>
-      <small>Click on run to launch the app again.</small>
-    </div>
-  </header>
+  <div><h1>Blog Page</h1>
+    <table border="1">
+      <tr>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Writer</th>
+        <th>Date Written</th>
+        <th colspan="2"> Edit Blogs </th>
+      </tr>
+      <tr :key="[componentKey].toString()" v-for="(value, key) in blogData">
+        <td>{{ value.Title }}</td>
+        <td> {{ value.Description }}</td>
+        <td>{{ value.User }}</td>
+        <td>{{ Date(value.Date).slice(0, 15)}}</td>
+        <td><RouterLink :to="{name: 'edit', params: {id: value.Id}}">Edit</RouterLink></td>
+        <td @click="deleteBlog(value.Id)">Delete</td>
+      </tr>
+    </table>
+  </div>
+<RouterView :key="componentKey"/>
 
 
-  <!-- <RouterView /> -->
+
 </template>
 
-<!-- 
+
 <style scoped>
+
 header {
   line-height: 1.5;
   max-height: 100vh;
@@ -124,6 +162,7 @@ nav a:first-of-type {
     display: flex;
     place-items: center;
     padding-right: calc(var(--section-gap) / 2);
+    justify-content: center;
   }
 
   .logo {
@@ -145,4 +184,4 @@ nav a:first-of-type {
     margin-top: 1rem;
   }
 }
-</style> -->
+</style> 
