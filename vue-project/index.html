@@ -10,19 +10,23 @@
 </head>
 
 <body>
-  <h1 class="titleBlog">Blog Page</h1>
+  <h1 class="titleBlog"><u>Blog Page</u></h1>
   <div id="app"></div>
   <script type="module" src="/src/main.js"></script>
 </body>
 <style>
 body{
   display: block;
+  /* color: white;
+  background-color: grey; */
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000,
 }
-.titleBlog{
+.titleBlog u{
   display: flex;
   justify-content: center;
   font-weight: bold;
   margin-top: 20px;
+  font-style: italic;
 }
 #app{
   padding: 10px;

@@ -56,7 +56,7 @@ function submitForm(submitEvent) {
         <input type="text" id="title" name="title">
       </div>
       <div class="editFields">
-        <label for="description">Blog Description: </label>
+        <label for="description">Blog Description:  </label>
         <input type="text" id="description" name="description">
       </div>
       <div class="editFields">
@@ -90,6 +90,7 @@ header{
 .editFields{
   display: flex;
   justify-content: space-between;
+  padding-bottom: 2px;
 }
 header{
   display: flex;
@@ -97,7 +98,15 @@ header{
   align-items: center;
   padding-top: 10px;
 }
-
+input{
+  border-color: purple;
+  background-color: lightgoldenrodyellow;
+  margin-left: 10px;
+  border-radius: 25px;
+}
+.submit{
+  border-radius: 25px;
+}
 </style>
 
 <!-- @media (min-width: 1024px) {

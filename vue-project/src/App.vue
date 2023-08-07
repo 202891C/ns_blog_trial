@@ -53,7 +53,7 @@ function deleteBlog(id) {
 
 <template>
   <div class="tableDiv">
-    <table border="1">
+    <table>
       <tr>
         <th>Title</th>
         <th>Description</th>
@@ -67,11 +67,11 @@ function deleteBlog(id) {
         <td>{{ value.User }}</td>
         <td>{{ Date(value.Date).slice(0, 15) }}</td>
         <td>
-          <RouterLink :to="{ name: 'edit', params: { id: value.Id } }" class="editBtn"><span class="material-icons">
+          <RouterLink :to="{ name: 'edit', params: { id: value.Id } }"><span class="material-icons">
             mode_edit
             </span></RouterLink>
         </td>
-        <td @click="deleteBlog(value.Id)"><span class="material-icons">
+        <td @click="deleteBlog(value.Id)" class="deleteBtn"><span class="material-icons">
           delete
           </span></td>
       </tr>
@@ -82,14 +82,18 @@ function deleteBlog(id) {
 
 
 <style scoped>
+.material-icons {
+  color: black;
+}
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
 
 th, td{
   padding: 10px;
 }
 
-.editBtn:nth-child(even){
-color: black !important;
-}
 tr:nth-child(even) {
   background-color: cadetblue;
   color: white;
