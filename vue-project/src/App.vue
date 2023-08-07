@@ -49,46 +49,17 @@ function deleteBlog(id) {
     })
 }
 
-// Removed login codes due to time constraints
-// function loginForm(loginEvent) {
-//       var credentials = {
-//         user: loginEvent.target.elements.user.value,
-//         present: loginEvent.target.elements.present.value,
-//       }
-//   fetch("http://localhost:3000/users/present", {
-//         method: 'POST',
-//         body: JSON.stringify({
-//           User: credentials.user,
-//           Present: credentials.present
-//         }) // convert JSON object to string
-//       })
-//       .then(res => {
-//         if (res.status != 200 && res != null){
-//           console.log('Incorrect password');
-//           // console.log(blog.title + ' ' + blog.description + ' ' + blog.user + ' ' + blog.userid)
-//         }
-//         else{
-//           console.log('Logged in!')
-
-//           router.push(
-
-//           )
-//         }
-//       })
-// }
-
 </script>
 
 <template>
-  <div>
-    <h1>Blog Page</h1>
+  <div class="tableDiv">
     <table border="1">
       <tr>
         <th>Title</th>
         <th>Description</th>
         <th>Writer</th>
         <th>Date Written</th>
-        <th colspan="2"> Edit Blogs </th>
+        <th colspan="2"> Actions </th>
       </tr>
       <tr :key="[componentKey].toString()" v-for="(value, key) in blogData">
         <td>{{ value.Title }}</td>
@@ -96,9 +67,13 @@ function deleteBlog(id) {
         <td>{{ value.User }}</td>
         <td>{{ Date(value.Date).slice(0, 15) }}</td>
         <td>
-          <RouterLink :to="{ name: 'edit', params: { id: value.Id } }">Edit</RouterLink>
+          <RouterLink :to="{ name: 'edit', params: { id: value.Id } }" class="editBtn"><span class="material-icons">
+            mode_edit
+            </span></RouterLink>
         </td>
-        <td @click="deleteBlog(value.Id)">Delete</td>
+        <td @click="deleteBlog(value.Id)"><span class="material-icons">
+          delete
+          </span></td>
       </tr>
     </table>
   </div>
@@ -107,18 +82,26 @@ function deleteBlog(id) {
 
 
 <style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
+
+th, td{
+  padding: 10px;
 }
 
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-    justify-content: center;
-  }
-
+.editBtn:nth-child(even){
+color: black !important;
 }
+tr:nth-child(even) {
+  background-color: cadetblue;
+  color: white;
+ }
+
+ th {
+  background-color: lightblue;
+ }
+
+ .tableDiv {
+  display: flex;
+  justify-content: center;
+ }
+
 </style> 

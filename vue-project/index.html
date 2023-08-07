@@ -5,12 +5,33 @@
   <meta charset="UTF-8">
   <link rel="icon" href="/favicon.ico">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   <title>Vite App</title>
 </head>
 
 <body>
+  <h1 class="titleBlog">Blog Page</h1>
   <div id="app"></div>
   <script type="module" src="/src/main.js"></script>
 </body>
+<style>
+body{
+  display: block;
+}
+.titleBlog{
+  display: flex;
+  justify-content: center;
+  font-weight: bold;
+  margin-top: 20px;
+}
+#app{
+  padding: 10px;
+}
+@media (min-width: 1024px) {
+  .titleBlog{
+  margin: 10px 0px;
+}
+}
 
+</style>
 </html>
