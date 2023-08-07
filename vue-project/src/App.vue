@@ -1,20 +1,14 @@
 <script setup>
-import { ref, onMounted, onBeforeMount} from 'vue'
+import { ref, onMounted, onBeforeMount } from 'vue'
 import { RouterLink, RouterView } from 'vue-router'
 import { useRoute, useRouter } from 'vue-router';
-import HelloWorld from './components/HelloWorld.vue'
-// import $ from "jquery";
-
-// const url = window.location.href;
-// const lastParam = url.split("/").slice(-2)[0];
-
 
 const componentKey = ref(0);
 
 const forceRerender = () => {
   componentKey.value += 1;
   console.log(componentKey.value)
-};
+}; // to reload page before I used window.location.reload
 
 // var data = [];
 const blogData = ref(null)
@@ -22,17 +16,11 @@ const blogData = ref(null)
 onMounted(() => {
   fetch("http://localhost:3000/blog", {
     method: 'GET',
-    // headers: {
-    // }
   })
     .then(async res => {
       if (res.status != 200) {
         console.log('Error loading blogs');
-        // console.log(blog.title + ' ' + blog.description + ' ' + blog.user + ' ' + blog.userid)
       }
-      // else if (lastParam == "edit"){
-
-      // }
       else {
         console.log('Blogs found!')
         // console.log(res.json())
@@ -41,29 +29,27 @@ onMounted(() => {
         blogData.value = data;
         // console.log(data)
         // forceRerender()
-        // window.location.reload();
+        // window.location.reload(); DO NOT USE this here. It will continually refresh the page
       }
     })
 })
-// onUpdated(() => {
-// })
 
-function deleteBlog(id){
+function deleteBlog(id) {
   fetch("http://localhost:3000/deleteBlog/" + id, {
     method: 'DELETE'
   })
-  .then(res => {
-    if (res.status != 200) {
+    .then(res => {
+      if (res.status != 200) {
         alert('Error deleting blogs');
       }
-      else{
-        // forceRerender()
+      else {
         alert('Deleted Blog');
         window.location.reload();
       }
-  })
+    })
 }
 
+// Removed login codes due to time constraints
 // function loginForm(loginEvent) {
 //       var credentials = {
 //         user: loginEvent.target.elements.user.value,
@@ -94,7 +80,8 @@ function deleteBlog(id){
 </script>
 
 <template>
-  <div><h1>Blog Page</h1>
+  <div>
+    <h1>Blog Page</h1>
     <table border="1">
       <tr>
         <th>Title</th>
@@ -107,54 +94,22 @@ function deleteBlog(id){
         <td>{{ value.Title }}</td>
         <td> {{ value.Description }}</td>
         <td>{{ value.User }}</td>
-        <td>{{ Date(value.Date).slice(0, 15)}}</td>
-        <td><RouterLink :to="{name: 'edit', params: {id: value.Id}}">Edit</RouterLink></td>
+        <td>{{ Date(value.Date).slice(0, 15) }}</td>
+        <td>
+          <RouterLink :to="{ name: 'edit', params: { id: value.Id } }">Edit</RouterLink>
+        </td>
         <td @click="deleteBlog(value.Id)">Delete</td>
       </tr>
     </table>
   </div>
-<RouterView :key="componentKey"/>
-
-
-
+  <RouterView :key="componentKey" />
 </template>
 
 
 <style scoped>
-
 header {
   line-height: 1.5;
   max-height: 100vh;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
-}
-
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
 }
 
 @media (min-width: 1024px) {
@@ -165,23 +120,5 @@ nav a:first-of-type {
     justify-content: center;
   }
 
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
 }
 </style> 

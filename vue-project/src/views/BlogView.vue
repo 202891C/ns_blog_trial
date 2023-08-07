@@ -87,6 +87,7 @@ tr:nth-child(even) {
  th {
   background-color: lightblue;
  }
+ 
 @media (min-width: 1024px) {
   .about {
     min-height: 100vh;
